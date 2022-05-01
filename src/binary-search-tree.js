@@ -107,29 +107,19 @@ class BinarySearchTree {
       const closestRight = this.#searchNode(node, node.data + 1);
       const avg = (node.left.data + node.right.data) / 2;
       
-      const closestNode = (!closestLeft.left && closestRight.right 
-                          || ((closestLeft.left && closestRight.right 
-                            || !closestLeft.left && !closestRight.right) 
-                            && Math.abs(avg - closestLeft) < Math.abs(closestRight - avg)))
-                          ? closestLeft : closestRight; //how can I simplify this?!
-      //const closestNode = closestLeft.left ? closestLeft : closestRight; //for testing of correct moving
+      const closestNode = (Math.abs(avg - closestLeft.data) < Math.abs(closestRight.data - avg)) 
+                          ? closestLeft : closestRight; 
 
-      if (closestNode.left || closestNode.right) {
-        if(closestNode.left) {
-          if (closestNode.parent != node)
-              closestNode.parent.setRightNode(closestNode.left);
-          else node.setLeftNode(closestNode.left);
-        } else {
-          if (closestNode.parent != node)
-              closestNode.parent.setLeftNode(closestNode.right);
-          else node.setRightNode(closestNode.right);
-        }
-        
-      } else {
-        if(closestNode.parent) closestNode.parent.killChild(closestNode.data);
-      }
+      if(closestNode.left) {
+        if (closestNode.parent == node) node.setLeftNode(closestNode.left);
+        else closestNode.parent.setRightNode(closestNode.left);
+      } else if (closestNode.right) {
+        if (closestNode.parent == node) node.setRightNode(closestNode.right);
+        else closestNode.parent.setLeftNode(closestNode.right);
+      } else 
+      if (closestNode.parent) closestNode.parent.killChild(closestNode.data);
 
-      node.data = closestNode.data; //todo: switch the node itself instead?
+      node.data = closestNode.data;
     } else
     if (node.left) {
       if (node.parent) {
